@@ -1,14 +1,13 @@
-const { AggregateError } = require('sequelize/types');
-
+// err -> AppError
 const globalErrorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
-  AggregateError.status = err.status || 'fail';
+  err.status = err.status || 'fail';
 
   res.status(err.statusCode).json({
     status: err.status,
     error: err,
     message: err.message,
-    statck: err.stack
+    stack: err.stack
   });
 };
 

@@ -4,7 +4,7 @@ const express = require('express');
 const {
   createUser,
   loginUser,
-  getProductsUser,
+  getUserProducts,
   updateUser,
   deleteUser,
   getOrders,
@@ -17,6 +17,11 @@ const {
   validateResult
 } = require('../middlewares/validators.middlewares');
 
+const {
+  protectAccountOwner,
+  userExists
+} = require('../middlewares/users.middleware');
+
 const { validateSession } = require('../middlewares/auth.middlewares');
 
 const router = express.Router();
@@ -27,9 +32,13 @@ router.post('/login', loginUser);
 
 router.use(validateSession);
 
-router.get('/me', getProductsUser);
+router.get('/me', getUserProducts);
 
-router.route('/:id').patch(updateUser).delete(deleteUser);
+router
+  .use('/:id', userExists, protectAccountOwner)
+  .route('/:id')
+  .patch(updateUser)
+  .delete(deleteUser);
 
 router.get('/orders', getOrders);
 
