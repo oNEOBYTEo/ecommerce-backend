@@ -115,8 +115,8 @@ exports.getOrders = catchAsync(async (req, res, next) => {
     where: { userId: currentUser.id },
     include: {
       model: Cart,
-      where: { userId: currentUser.id },
-      include: { model: Product, where: { status: 'purchased' } }
+      where: { status: 'purchased' },
+      include: { model: Product }
     }
   });
 
@@ -127,14 +127,15 @@ exports.getOrders = catchAsync(async (req, res, next) => {
 });
 
 exports.getOrderById = catchAsync(async (req, res, next) => {
-  const { currentUser, id } = req;
+  const { id } = req.params;
+  const { currentUser } = req;
 
   const userOrder = await Order.findAll({
     where: { id, userId: currentUser.id },
     include: {
       model: Cart,
-      where: { userId: currentUser.id },
-      include: { model: Product, where: { status: 'purchased' } }
+      where: { status: 'purchased', userId: currentUser.id },
+      include: { model: Product }
     }
   });
 
