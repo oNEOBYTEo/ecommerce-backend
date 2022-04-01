@@ -17,8 +17,25 @@ const {
   validateResult
 } = require('../middlewares/validators.middlewares');
 
+const {
+  productExists,
+  protectProductsOwner
+} = require('../middlewares/products.middlewares');
+
 const router = express.Router();
 
 router.use(validateSession);
 
-router.post('/', createProductValidators, validateResult, createProduct);
+router
+  .route('/')
+  .post(createProductValidators, validateResult, createProduct)
+  .get(getAllProducts);
+
+router
+  .use('/:id', productExists)
+  .route('/:id')
+  .get(getProductById)
+  .patch(protectProductsOwner, updateProduct)
+  .delete(protectProductsOwner, deleteProduct);
+
+module.exports = { productsRouter: router };

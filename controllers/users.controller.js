@@ -72,6 +72,24 @@ exports.getUserProducts = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.findAll({
+    where: { status: 'active' },
+    attributes: { exclude: 'password' }
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: { users }
+  });
+});
+
+exports.getUserById = catchAsync(async (req, res, next) => {
+  const { user } = req;
+
+  res.status(200).json({ status: 'success', data: { user } });
+});
+
 exports.updateUser = catchAsync(async (req, res, next) => {
   const { user } = req;
 

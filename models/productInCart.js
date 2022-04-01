@@ -4,27 +4,26 @@ const { sequelize } = require('../util/database');
 const ProductInCart = sequelize.define('productInCart', {
   id: {
     primaryKey: true,
-    type: DataTypes.INTEGER,
     autoIncrement: true,
-    allowNull: false
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    type: DataTypes.INTEGER
   },
   productId: {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  cartId: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
   quantity: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
+    allowNull: false
   },
   status: {
     type: DataTypes.STRING(10),
-    defaultValue: 'active',
-    allowNull: false
+    allowNull: false,
+    defaultValue: 'active'
   }
 });
 

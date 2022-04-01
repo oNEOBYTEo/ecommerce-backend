@@ -1,30 +1,35 @@
 // Models
 const { Product } = require('../models/product.model');
+const { User } = require('../models/user.model');
 
 // Util
 const { catchAsync } = require('../util/catchAsync');
+const { filterObj } = require('../util/filterObj');
 
 exports.createProduct = catchAsync(async (req, res, next) => {
-  const { currentuser } = req;
+  const { currentUser } = req;
 
   const { title, description, price, quantity } = req.body;
 
-  const newProduct = Product.create({
+  const newProduct = await Product.create({
     title,
     description,
     price,
     quantity,
-    userId: currentuser.id
+    userId: currentUser.id
   });
 
-  res.status(200).json({
+  res.status(201).json({
     status: 'success',
     data: { newProduct }
   });
 });
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-  const products = Product.findAll({ where: { status: 'active' } });
+  const products = await Product.findAll({
+    where: { status: 'active' },
+    include: { model: User, attributes: { exclude: ['password'] } }
+  });
 
   res.status(200).json({
     status: 'success',

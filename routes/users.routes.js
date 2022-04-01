@@ -8,7 +8,9 @@ const {
   updateUser,
   deleteUser,
   getOrders,
-  getOrderById
+  getOrderById,
+  getAllUsers,
+  getUserById
 } = require('../controllers/users.controller');
 
 // Middlewares
@@ -32,16 +34,19 @@ router.post('/login', loginUser);
 
 router.use(validateSession);
 
-router.get('/me', getUserProducts);
+router.get('/', getAllUsers);
 
-router
-  .use('/:id', userExists, protectAccountOwner)
-  .route('/:id')
-  .patch(updateUser)
-  .delete(deleteUser);
+router.get('/me', getUserProducts);
 
 router.get('/orders', getOrders);
 
 router.get('/orders/:id', getOrderById);
+
+router
+  .use('/:id', userExists)
+  .route('/:id')
+  .get(getUserById)
+  .patch(protectAccountOwner, updateUser)
+  .delete(protectAccountOwner, deleteUser);
 
 module.exports = { usersRouter: router };
